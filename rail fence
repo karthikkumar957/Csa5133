@@ -1,0 +1,54 @@
+def encrypt(text, key):
+    text = text.replace(" ", "")
+    rail = [""] * key
+    row = 0
+    direction = 1
+    
+    for ch in text:
+        rail[row] += ch
+        row += direction
+        
+        if row == 0 or row == key - 1:
+            direction *= -1
+    
+    return "".join(rail)
+
+def decrypt(cipher, key):
+    n = len(cipher)
+    rail = [["\n"] * n for _ in range(key)]
+    row = 0
+    direction = 1
+    
+    for col in range(n):
+        rail[row][col] = "*"
+        row += direction
+        if row == 0 or row == key - 1:
+            direction *= -1
+    
+    index = 0
+    for i in range(key):
+        for j in range(n):
+            if rail[i][j] == "*" and index < n:
+                rail[i][j] = cipher[index]
+                index += 1
+    
+    result = ""
+    row = 0
+    direction = 1
+    
+    for col in range(n):
+        result += rail[row][col]
+        row += direction
+        if row == 0 or row == key - 1:
+            direction *= -1
+    
+    return result
+
+key = int(input("Enter fence value: "))
+text = input("Enter message: ")
+
+cipher = encrypt(text, key)
+print("Encrypted:", cipher)
+
+plain = decrypt(cipher, key)
+print("Decrypted:", plain)
